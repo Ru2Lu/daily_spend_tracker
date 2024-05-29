@@ -11,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int? _monthlyBudget;
   final _controller = TextEditingController();
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -27,49 +28,68 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            '今月使用できる金額を入力してください',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+        return StatefulBuilder(builder: (
+          BuildContext context,
+          StateSetter setDialogState,
+        ) {
+          return AlertDialog(
+            title: const Text(
+              '今月使用できる金額を入力してください',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          content: TextFormField(
-            controller: _controller,
-            autofocus: true,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(fontSize: 42),
-            decoration: const InputDecoration(
-              hintText: '300,000',
-              suffixText: '円',
-            ),
-            onChanged: (budgetValue) {
-              budgetValue = _formMoneyString(
-                budgetValue.replaceAll(',', ''),
-              );
-              _controller.value = TextEditingValue(
-                text: budgetValue,
-                selection: TextSelection.collapsed(
-                  offset: budgetValue.length,
-                ),
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _monthlyBudget = int.tryParse(
-                    _controller.text.replaceAll(',', ''),
-                  );
-                });
-                Navigator.of(context).pop();
+            content: TextFormField(
+              controller: _controller,
+              autofocus: true,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 42),
+              decoration: InputDecoration(
+                hintText: '300,000',
+                suffixText: '円',
+                errorText: _errorMessage,
+              ),
+              onChanged: (budgetValue) {
+                if (budgetValue.isNotEmpty) {
+                  setDialogState(() {
+                    _errorMessage = null;
+                  });
+                }
+                budgetValue = _formMoneyString(
+                  budgetValue.replaceAll(',', ''),
+                );
+                _controller.value = TextEditingValue(
+                  text: budgetValue,
+                  selection: TextSelection.collapsed(
+                    offset: budgetValue.length,
+                  ),
+                );
               },
-              child: const Text('確定'),
             ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (_controller.text.isEmpty) {
+                    // 金額が入力されていない場合は確定を押してもダイアログが閉じない
+                    setDialogState(() {
+                      _errorMessage = '金額を入力してください';
+                    });
+                  } else {
+                    // 金額が入力されてる場合はダイアログを閉じる
+                    setState(() {
+                      _monthlyBudget = int.tryParse(
+                        _controller.text.replaceAll(',', ''),
+                      );
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('確定'),
+              ),
+            ],
+          );
+        });
       },
     );
   }
