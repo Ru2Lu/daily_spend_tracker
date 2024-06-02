@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/monthly_budget_provider.dart';
-import '../providers/dialog_error_message_provider.dart';
+import '../providers/dialog/dialog_controller_provider.dart';
+import '../providers/dialog/dialog_error_message_provider.dart';
 import '../utils/format.dart';
 
 class MonthlyBudgetDialog extends ConsumerStatefulWidget {
@@ -12,10 +13,9 @@ class MonthlyBudgetDialog extends ConsumerStatefulWidget {
 }
 
 class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
-  final _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(dialogControllerProvider);
     return StatefulBuilder(builder: (
       BuildContext context,
       StateSetter setState,
@@ -32,7 +32,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
           builder: (context, ref, _) {
             final errorMessage = ref.watch(dialogErrorMessageProvider);
             return TextFormField(
-              controller: _controller,
+              controller: controller,
               autofocus: true,
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 42),
@@ -50,7 +50,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
                 budgetValue = formatCommaSeparateNumber(
                   budgetValue.replaceAll(',', ''),
                 );
-                _controller.value = TextEditingValue(
+                controller.value = TextEditingValue(
                   text: budgetValue,
                   selection: TextSelection.collapsed(
                     offset: budgetValue.length,
@@ -63,7 +63,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
         actions: [
           TextButton(
             onPressed: () {
-              if (_controller.text.isEmpty) {
+              if (controller.text.isEmpty) {
                 // 金額が入力されていない場合は確定を押してもダイアログが閉じない
                 ref
                     .read(dialogErrorMessageProvider.notifier)
@@ -71,7 +71,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
               } else {
                 // 金額が入力されてる場合はダイアログを閉じる
                 final monthlyBudget = int.tryParse(
-                  _controller.text.replaceAll(',', ''),
+                  controller.text.replaceAll(',', ''),
                 );
                 ref
                     .read(monthlyBudgetProvider.notifier)
