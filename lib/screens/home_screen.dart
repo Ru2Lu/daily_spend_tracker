@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/monthly_budget_provider.dart';
 import '../providers/dialog_error_message_provider.dart';
+import '../utils/format.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -60,7 +60,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                           .read(dialogErrorMessageProvider.notifier)
                           .clearDialogErrorMessage();
                     }
-                    budgetValue = _formMoneyString(
+                    budgetValue = formatCommaSeparateNumber(
                       budgetValue.replaceAll(',', ''),
                     );
                     _controller.value = TextEditingValue(
@@ -101,12 +101,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  String _formMoneyString(String money) {
-    return NumberFormat.decimalPattern().format(
-      int.parse(money),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final monthlyBudget = ref.watch(monthlyBudgetProvider);
@@ -118,7 +112,9 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
       body: Center(
         child: Text(
           monthlyBudget != null
-              ? '今月使用できる金額は${_formMoneyString(monthlyBudget.toString())}円です'
+              ? '今月使用できる金額は${formatCommaSeparateNumber(
+                  monthlyBudget.toString(),
+                )}円です'
               : '今月使用できる金額は-円です',
         ),
       ),
