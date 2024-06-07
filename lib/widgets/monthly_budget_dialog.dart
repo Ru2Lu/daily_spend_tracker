@@ -1,6 +1,6 @@
+import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/monthly_budget_provider.dart';
 import '../providers/dialog/dialog_controller_provider.dart';
 import '../providers/dialog/dialog_error_message_provider.dart';
 import '../utils/format.dart';
@@ -61,9 +61,11 @@ class MonthlyBudgetDialog extends ConsumerWidget {
               final monthlyBudget = int.tryParse(
                 controller.text.replaceAll(',', ''),
               );
-              ref
-                  .read(monthlyBudgetProvider.notifier)
-                  .setMonthlyBudget(monthlyBudget);
+              ref.read(monthlyBudgetServiceProvider.future).then(
+                    (service) => service.saveMonthlyBudget(
+                      monthlyBudget,
+                    ),
+                  );
               Navigator.of(context).pop();
             }
           },
