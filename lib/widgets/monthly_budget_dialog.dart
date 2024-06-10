@@ -5,11 +5,40 @@ import '../providers/dialog/dialog_controller_provider.dart';
 import '../providers/dialog/dialog_error_message_provider.dart';
 import '../utils/format.dart';
 
-class MonthlyBudgetDialog extends ConsumerWidget {
-  const MonthlyBudgetDialog({super.key});
+class MonthlyBudgetDialog extends ConsumerStatefulWidget {
+  const MonthlyBudgetDialog({
+    this.initialValue,
+    super.key,
+  });
+
+  /// 今月の予算の初期値
+  final int? initialValue;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  MonthlyBudgetDialogState createState() => MonthlyBudgetDialogState();
+}
+
+class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null) {
+      final controller = ref.read(dialogControllerProvider);
+      final initialText = widget.initialValue!.toString();
+      final budgetValue = formatCommaSeparateNumber(
+        initialText.replaceAll(',', ''),
+      );
+      controller.value = TextEditingValue(
+        text: budgetValue,
+        selection: TextSelection.collapsed(
+          offset: budgetValue.length,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final controller = ref.watch(dialogControllerProvider);
     final errorMessage = ref.watch(dialogErrorMessageProvider);
 

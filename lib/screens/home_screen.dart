@@ -16,18 +16,25 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        _showMonthlyBudgetDialog();
+      (_) async {
+        // 今月の予算が未入力の場合はダイアログを表示する
+        final monthlyBudget =
+            await ref.read(monthlyBudgetServiceProvider.future).then(
+                  (service) => service.getMonthlyBudget(),
+                );
+        if (monthlyBudget?.budget == null) {
+          _showMonthlyBudgetDialog();
+        }
       },
     );
   }
 
-  Future<void> _showMonthlyBudgetDialog() async {
+  Future<void> _showMonthlyBudgetDialog({int? monthlyBudget}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const MonthlyBudgetDialog();
+        return MonthlyBudgetDialog(initialValue: monthlyBudget);
       },
     );
   }
@@ -42,12 +49,24 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         title: const Text('ホーム画面'),
       ),
       body: Center(
-        child: Text(
-          monthlyBudget != null
-              ? '今月使用できる金額は${formatCommaSeparateNumber(
-                  monthlyBudget.toString(),
-                )}円です'
-              : '今月使用できる金額は-円です',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              monthlyBudget != null
+                  ? '今月使用できる金額は${formatCommaSeparateNumber(
+                      monthlyBudget.toString(),
+                    )}円です'
+                  : '今月使用できる金額は-円です',
+            ),
+            IconButton(
+              onPressed: () {
+                _showMonthlyBudgetDialog(monthlyBudget: monthlyBudget);
+              },
+              icon: const Icon(Icons.edit),
+            )
+          ],
         ),
       ),
     );

@@ -8,6 +8,11 @@ class MonthlyBudgetService {
 
   final Isar isar;
 
+  // 今月の予算を取得
+  Future<MonthlyBudget?> getMonthlyBudget() async {
+    return await isar.monthlyBudgets.where().findFirst();
+  }
+
   // 今月の予算を監視
   Stream<MonthlyBudget?> watchMonthlyBudget() async* {
     final query = isar.monthlyBudgets.where();
