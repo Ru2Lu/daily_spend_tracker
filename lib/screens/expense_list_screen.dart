@@ -30,6 +30,27 @@ class ExpenseListScreen extends ConsumerWidget {
           dayBudget.toString(),
         )}円です'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return const SizedBox(
+                height: 200,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('支出入力欄'),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
