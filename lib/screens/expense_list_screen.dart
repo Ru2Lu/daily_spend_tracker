@@ -1,4 +1,5 @@
 import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/widgets/expense_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utils/format.dart';
@@ -35,17 +36,7 @@ class ExpenseListScreen extends ConsumerWidget {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('支出入力欄'),
-                    ],
-                  ),
-                ),
-              );
+              return const ExpenseBottomSheet();
             },
           );
         },
