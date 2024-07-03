@@ -6,7 +6,7 @@ part of 'index_bottom_navbar_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$indexBottomNavbarHash() => r'9ef0c49a5282ae56d02881b5e8c7720f22be3b9b';
+String _$indexBottomNavbarHash() => r'0b1833fdf0e7575be75519679d38f32ff396270e';
 
 /// See also [IndexBottomNavbar].
 @ProviderFor(IndexBottomNavbar)

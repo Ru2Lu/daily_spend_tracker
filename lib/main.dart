@@ -3,6 +3,7 @@ import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
 import 'package:daily_spend_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(
@@ -32,6 +33,14 @@ class MyApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale("ja"),
+      ],
       home: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: indexBottomNavbar,
