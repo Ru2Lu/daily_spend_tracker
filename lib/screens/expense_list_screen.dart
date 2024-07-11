@@ -35,6 +35,7 @@ class ExpenseListScreen extends ConsumerWidget {
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            isScrollControlled: true,
             builder: (BuildContext context) {
               return const ExpenseBottomSheet();
             },
