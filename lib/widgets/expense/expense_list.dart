@@ -2,6 +2,7 @@ import 'package:daily_spend_tracker/models/expense.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class ExpenseList extends StatelessWidget {
   const ExpenseList({
@@ -38,7 +39,7 @@ class ExpenseList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      '${currentDate.month}/${currentDate.day}',
+                      _formatDateWithWeekday(currentDate),
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -89,5 +90,11 @@ class ExpenseList extends StatelessWidget {
     }
 
     return expensesByDate;
+  }
+
+  /// 曜日付きの日付にフォーマットする
+  String _formatDateWithWeekday(DateTime date) {
+    final DateFormat formatter = DateFormat('M/d(E)', 'ja');
+    return formatter.format(date);
   }
 }
