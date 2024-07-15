@@ -68,21 +68,127 @@ class ExpenseList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: expensesAsyncValue.when(
-        data: (expenses) => ListView.builder(
-          itemCount: expenses?.length ?? 0,
-          itemBuilder: (context, index) {
-            final expense = expenses?[index];
-            return ListTile(
-              title: Text('${expense?.date}'),
-              subtitle: Text('${expense?.title} ¥${expense?.amount ?? 0}'),
+        data: (expenses) {
+          if (expenses == null || expenses.isEmpty) {
+            return const Center(
+              child: Text('支出項目がありません'),
             );
-          },
-        ),
+          }
+
+          // 日付ごとに支出項目をグループ化
+          final expensesByDate = _groupExpensesByDate(expenses);
+
+          return ListView.builder(
+            itemCount: expensesByDate.keys.length,
+            itemBuilder: (context, index) {
+              final currentDate = expensesByDate.keys.elementAt(index);
+              final expensesByCurrentDate = expensesByDate[currentDate];
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 日付
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      '${currentDate.month}/${currentDate.day}',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // 支出項目一覧
+                  ...expensesByCurrentDate!.map((expense) {
+                    return ExpenseCard(
+                      title: expense.title ?? '',
+                      amount: expense.amount.toString(),
+                    );
+                  }),
+                ],
+              );
+            },
+          );
+        },
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
         error: (err, stack) => const Center(
           child: Text('エラーが発生しました'),
+        ),
+      ),
+    );
+  }
+
+  /// 日付毎に支出をグルーピングする
+  Map<DateTime, List<Expense>> _groupExpensesByDate(List<Expense> expenses) {
+    final Map<DateTime, List<Expense>> expensesByDate = {};
+
+    for (var expense in expenses) {
+      final expenseDate = expense.date;
+      if (expenseDate == null) {
+        continue;
+      }
+      final currentDate = DateTime(
+        expenseDate.year,
+        expenseDate.month,
+        expenseDate.day,
+      );
+      if (expensesByDate[currentDate] == null) {
+        expensesByDate[currentDate] = [expense];
+      } else {
+        expensesByDate[currentDate]!.add(expense);
+      }
+    }
+
+    return expensesByDate;
+  }
+}
+
+/// 支出項目
+class ExpenseCard extends StatelessWidget {
+  const ExpenseCard({
+    required this.title,
+    required this.amount,
+    super.key,
+  });
+
+  /// 支出のタイトル
+  final String title;
+
+  /// 支出の金額
+  final String amount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text(
+                '${formatCommaSeparateNumber(amount)}円',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
