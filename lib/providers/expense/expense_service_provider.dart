@@ -1,3 +1,4 @@
+import 'package:daily_spend_tracker/models/expense.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../services/expense_service.dart';
 import '../isar_provider.dart';
@@ -10,4 +11,12 @@ Future<ExpenseService> expenseService(
 ) async {
   final isar = await ref.watch(isarProvider.future);
   return ExpenseService(isar);
+}
+
+@riverpod
+Stream<List<Expense>?> expenses(
+  ExpensesRef ref,
+) async* {
+  final service = await ref.watch(expenseServiceProvider.future);
+  yield* service.watchExpenses();
 }

@@ -22,13 +22,18 @@ const ExpenseSchema = CollectionSchema(
       name: r'amount',
       type: IsarType.long,
     ),
-    r'date': PropertySchema(
+    r'createdDate': PropertySchema(
       id: 1,
+      name: r'createdDate',
+      type: IsarType.dateTime,
+    ),
+    r'date': PropertySchema(
+      id: 2,
       name: r'date',
       type: IsarType.dateTime,
     ),
     r'title': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'title',
       type: IsarType.string,
     )
@@ -69,8 +74,9 @@ void _expenseSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.amount);
-  writer.writeDateTime(offsets[1], object.date);
-  writer.writeString(offsets[2], object.title);
+  writer.writeDateTime(offsets[1], object.createdDate);
+  writer.writeDateTime(offsets[2], object.date);
+  writer.writeString(offsets[3], object.title);
 }
 
 Expense _expenseDeserialize(
@@ -81,9 +87,10 @@ Expense _expenseDeserialize(
 ) {
   final object = Expense(
     amount: reader.readLongOrNull(offsets[0]),
-    date: reader.readDateTimeOrNull(offsets[1]),
+    createdDate: reader.readDateTime(offsets[1]),
+    date: reader.readDateTimeOrNull(offsets[2]),
     id: id,
-    title: reader.readStringOrNull(offsets[2]),
+    title: reader.readStringOrNull(offsets[3]),
   );
   return object;
 }
@@ -98,8 +105,10 @@ P _expenseDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -254,6 +263,59 @@ extension ExpenseQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'amount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> createdDateEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> createdDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> createdDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> createdDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -549,6 +611,18 @@ extension ExpenseQuerySortBy on QueryBuilder<Expense, Expense, QSortBy> {
     });
   }
 
+  QueryBuilder<Expense, Expense, QAfterSortBy> sortByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> sortByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Expense, Expense, QAfterSortBy> sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
@@ -585,6 +659,18 @@ extension ExpenseQuerySortThenBy
   QueryBuilder<Expense, Expense, QAfterSortBy> thenByAmountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amount', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> thenByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> thenByCreatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdDate', Sort.desc);
     });
   }
 
@@ -633,6 +719,12 @@ extension ExpenseQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Expense, Expense, QDistinct> distinctByCreatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdDate');
+    });
+  }
+
   QueryBuilder<Expense, Expense, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
@@ -658,6 +750,12 @@ extension ExpenseQueryProperty
   QueryBuilder<Expense, int?, QQueryOperations> amountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'amount');
+    });
+  }
+
+  QueryBuilder<Expense, DateTime, QQueryOperations> createdDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdDate');
     });
   }
 

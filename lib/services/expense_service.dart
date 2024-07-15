@@ -8,6 +8,15 @@ class ExpenseService {
 
   final Isar isar;
 
+  // 全ての支出項目を取得
+  Stream<List<Expense>?> watchExpenses() {
+    return isar.expenses
+        .where()
+        .sortByDateDesc()
+        .thenByCreatedDateDesc()
+        .watch(fireImmediately: true);
+  }
+
   // 支出を保存
   Future<void> saveExpense(
     DateTime date,
@@ -20,6 +29,7 @@ class ExpenseService {
         date: date,
         title: title,
         amount: amount,
+        createdDate: DateTime.now(),
       );
       await isar.expenses.put(expense);
     });
