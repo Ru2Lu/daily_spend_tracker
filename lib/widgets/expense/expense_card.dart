@@ -21,6 +21,7 @@ class ExpenseCard extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // 支出のタイトル
             Expanded(
               flex: 2,
               child: Text(
@@ -32,7 +33,8 @@ class ExpenseCard extends StatelessWidget {
                 ),
               ),
             ),
-            Flexible(
+            // 支出の金額
+            Expanded(
               flex: 1,
               child: Text(
                 '${formatCommaSeparateNumber(amount)}円',
@@ -41,6 +43,7 @@ class ExpenseCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   overflow: TextOverflow.ellipsis,
                 ),
+                textAlign: TextAlign.end,
               ),
             ),
           ],
