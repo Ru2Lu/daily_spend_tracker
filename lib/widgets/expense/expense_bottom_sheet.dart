@@ -126,13 +126,12 @@ class ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
     WidgetRef ref,
   ) async {
     final now = DateTime.now();
-    final lastDayOfThisMonth = DateTime(now.year, now.month + 1, 0).day;
     final pickedDate = await showDatePicker(
       locale: const Locale("ja"),
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(now.year, now.month, 1),
-      lastDate: DateTime(now.year, now.month, lastDayOfThisMonth),
+      lastDate: DateTime(now.year, now.month, now.day),
     );
 
     if (pickedDate != null) {
