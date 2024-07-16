@@ -53,4 +53,16 @@ class ExpenseService {
       }
     });
   }
+
+  // 支出を削除
+  Future<void> deleteExpense(
+    int id,
+  ) async {
+    await isar.writeTxn(() async {
+      final expense = await isar.expenses.get(id);
+      if (expense != null) {
+        await isar.expenses.delete(id);
+      }
+    });
+  }
 }

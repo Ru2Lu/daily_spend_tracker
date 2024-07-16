@@ -7,6 +7,7 @@ class ExpenseCard extends StatelessWidget {
     required this.title,
     required this.amount,
     required this.editExpense,
+    required this.deleteExpense,
     super.key,
   });
 
@@ -18,6 +19,9 @@ class ExpenseCard extends StatelessWidget {
 
   /// 支出の編集
   final void Function() editExpense;
+
+  /// 支出の削除
+  final void Function() deleteExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +40,9 @@ class ExpenseCard extends StatelessWidget {
             label: '編集',
           ),
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              deleteExpense();
+            },
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
             icon: Icons.delete,

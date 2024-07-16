@@ -1,11 +1,12 @@
 import 'package:daily_spend_tracker/models/expense.dart';
+import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ExpenseList extends StatelessWidget {
+class ExpenseList extends ConsumerWidget {
   const ExpenseList({
     super.key,
     required this.expensesAsyncValue,
@@ -14,7 +15,7 @@ class ExpenseList extends StatelessWidget {
   final AsyncValue<List<Expense>?> expensesAsyncValue;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       child: expensesAsyncValue.when(
         data: (expenses) {
@@ -60,6 +61,12 @@ class ExpenseList extends StatelessWidget {
                             return ExpenseBottomSheet(expense: expense);
                           },
                         );
+                      },
+                      deleteExpense: () async {
+                        final expenseService =
+                            await ref.read(expenseServiceProvider.future);
+                        // 削除
+                        await expenseService.deleteExpense(expense.id);
                       },
                     );
                   }),
