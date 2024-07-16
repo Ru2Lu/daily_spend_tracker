@@ -36,6 +36,11 @@ const ExpenseSchema = CollectionSchema(
       id: 3,
       name: r'title',
       type: IsarType.string,
+    ),
+    r'updatedDate': PropertySchema(
+      id: 4,
+      name: r'updatedDate',
+      type: IsarType.dateTime,
     )
   },
   estimateSize: _expenseEstimateSize,
@@ -77,6 +82,7 @@ void _expenseSerialize(
   writer.writeDateTime(offsets[1], object.createdDate);
   writer.writeDateTime(offsets[2], object.date);
   writer.writeString(offsets[3], object.title);
+  writer.writeDateTime(offsets[4], object.updatedDate);
 }
 
 Expense _expenseDeserialize(
@@ -91,6 +97,7 @@ Expense _expenseDeserialize(
     date: reader.readDateTimeOrNull(offsets[2]),
     id: id,
     title: reader.readStringOrNull(offsets[3]),
+    updatedDate: reader.readDateTime(offsets[4]),
   );
   return object;
 }
@@ -110,6 +117,8 @@ P _expenseDeserializeProp<P>(
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -590,6 +599,59 @@ extension ExpenseQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> updatedDateEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> updatedDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> updatedDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterFilterCondition> updatedDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension ExpenseQueryObject
@@ -644,6 +706,18 @@ extension ExpenseQuerySortBy on QueryBuilder<Expense, Expense, QSortBy> {
   QueryBuilder<Expense, Expense, QAfterSortBy> sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> sortByUpdatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> sortByUpdatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedDate', Sort.desc);
     });
   }
 }
@@ -709,6 +783,18 @@ extension ExpenseQuerySortThenBy
       return query.addSortBy(r'title', Sort.desc);
     });
   }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> thenByUpdatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QAfterSortBy> thenByUpdatedDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedDate', Sort.desc);
+    });
+  }
 }
 
 extension ExpenseQueryWhereDistinct
@@ -735,6 +821,12 @@ extension ExpenseQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Expense, Expense, QDistinct> distinctByUpdatedDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedDate');
     });
   }
 }
@@ -768,6 +860,12 @@ extension ExpenseQueryProperty
   QueryBuilder<Expense, String?, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<Expense, DateTime, QQueryOperations> updatedDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedDate');
     });
   }
 }

@@ -30,8 +30,27 @@ class ExpenseService {
         title: title,
         amount: amount,
         createdDate: DateTime.now(),
+        updatedDate: DateTime.now(),
       );
       await isar.expenses.put(expense);
+    });
+  }
+
+  // 支出を編集
+  Future<void> editExpense(
+    int id,
+    DateTime newDate,
+    String newTitle,
+    int newAmount,
+  ) async {
+    await isar.writeTxn(() async {
+      final expense = await isar.expenses.get(id);
+      if (expense != null) {
+        expense.date = newDate;
+        expense.title = newTitle;
+        expense.amount = newAmount;
+        await isar.expenses.put(expense);
+      }
     });
   }
 }

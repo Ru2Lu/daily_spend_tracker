@@ -10,20 +10,24 @@ class Expense {
     required this.title,
     required this.amount,
     required this.createdDate,
+    required this.updatedDate,
   });
 
   /// ID
   final Id id;
 
   /// 支出の日付
-  final DateTime? date;
+  DateTime? date;
 
   /// 支出のタイトル
-  final String? title;
+  String? title;
 
   /// 支出の金額
-  final int? amount;
+  int? amount;
 
   /// データの作成日時
   final DateTime createdDate;
+
+  /// データの更新日時
+  final DateTime updatedDate;
 }

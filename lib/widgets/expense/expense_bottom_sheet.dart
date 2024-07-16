@@ -1,3 +1,4 @@
+import 'package:daily_spend_tracker/models/expense.dart';
 import 'package:daily_spend_tracker/providers/expense/expense_item_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,10 @@ import 'package:daily_spend_tracker/providers/expense/expense_service_provider.d
 class ExpenseBottomSheet extends ConsumerStatefulWidget {
   const ExpenseBottomSheet({
     super.key,
+    this.expense,
   });
+
+  final Expense? expense;
 
   @override
   ExpenseBottomSheetState createState() => ExpenseBottomSheetState();
@@ -24,10 +28,17 @@ class ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
   @override
   void initState() {
     super.initState();
-    titleController = TextEditingController(text: '');
-    amountController = TextEditingController(text: '');
-    final now = DateTime.now();
-    selectedDate = DateTime(now.year, now.month, now.day);
+    if (widget.expense != null) {
+      titleController = TextEditingController(text: widget.expense!.title);
+      amountController =
+          TextEditingController(text: widget.expense!.amount.toString());
+      selectedDate = widget.expense!.date!;
+    } else {
+      titleController = TextEditingController(text: '');
+      amountController = TextEditingController(text: '');
+      final now = DateTime.now();
+      selectedDate = DateTime(now.year, now.month, now.day);
+    }
   }
 
   @override
@@ -104,16 +115,27 @@ class ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
                     final expenseAmount = int.parse(amountController.text);
                     final expenseService =
                         await ref.read(expenseServiceProvider.future);
-                    await expenseService.saveExpense(
-                      selectedDate,
-                      titleController.text,
-                      expenseAmount,
-                    );
+                    if (widget.expense == null) {
+                      // 新規作成
+                      await expenseService.saveExpense(
+                        selectedDate,
+                        titleController.text,
+                        expenseAmount,
+                      );
+                    } else {
+                      // 編集
+                      await expenseService.editExpense(
+                        widget.expense!.id,
+                        selectedDate,
+                        titleController.text,
+                        expenseAmount,
+                      );
+                    }
                     if (!context.mounted) return;
                     Navigator.of(context).pop();
                   }
                 : null,
-            child: const Text('保存'),
+            child: Text(widget.expense == null ? '保存' : '更新'),
           ),
           const SizedBox(height: 32),
         ],

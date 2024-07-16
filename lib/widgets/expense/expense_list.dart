@@ -1,4 +1,5 @@
 import 'package:daily_spend_tracker/models/expense.dart';
+import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -51,6 +52,15 @@ class ExpenseList extends StatelessWidget {
                     return ExpenseCard(
                       title: expense.title ?? '',
                       amount: expense.amount.toString(),
+                      editExpense: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return ExpenseBottomSheet(expense: expense);
+                          },
+                        );
+                      },
                     );
                   }),
                 ],

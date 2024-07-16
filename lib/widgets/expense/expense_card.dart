@@ -6,6 +6,7 @@ class ExpenseCard extends StatelessWidget {
   const ExpenseCard({
     required this.title,
     required this.amount,
+    required this.editExpense,
     super.key,
   });
 
@@ -15,6 +16,9 @@ class ExpenseCard extends StatelessWidget {
   /// 支出の金額
   final String amount;
 
+  /// 支出の編集
+  final void Function() editExpense;
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
@@ -23,7 +27,9 @@ class ExpenseCard extends StatelessWidget {
         motion: const ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              editExpense();
+            },
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
             icon: Icons.edit,
