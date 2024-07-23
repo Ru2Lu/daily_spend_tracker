@@ -4,6 +4,7 @@ import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../utils/format.dart';
 
 class ExpenseListScreen extends ConsumerWidget {
@@ -27,7 +28,14 @@ class ExpenseListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('今月の支出画面'),
+        title: Text(
+          _formatFullDateWithWeekday(
+            DateTime.now(),
+          ),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -55,5 +63,11 @@ class ExpenseListScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  /// 曜日付きの日付にフォーマットする
+  String _formatFullDateWithWeekday(DateTime date) {
+    final DateFormat formatter = DateFormat('yyyy/M/d(E)', 'ja');
+    return formatter.format(date);
   }
 }
