@@ -36,7 +36,10 @@ class ExpenseListScreen extends ConsumerWidget {
             dayBudget.toString(),
           )}円です'),
           // 支出一覧リスト
-          ExpenseList(expensesAsyncValue: expensesAsyncValue),
+          ExpenseList(
+            expensesAsyncValue: expensesAsyncValue,
+            dayBudget: dayBudget,
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

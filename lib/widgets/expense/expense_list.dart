@@ -8,11 +8,14 @@ import 'package:intl/intl.dart';
 
 class ExpenseList extends ConsumerWidget {
   const ExpenseList({
-    super.key,
     required this.expensesAsyncValue,
+    required this.dayBudget,
+    super.key,
   });
 
   final AsyncValue<List<Expense>?> expensesAsyncValue;
+
+  final int dayBudget;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,20 +36,31 @@ class ExpenseList extends ConsumerWidget {
             itemBuilder: (context, index) {
               final currentDate = expensesByDate.keys.elementAt(index);
               final expensesByCurrentDate = expensesByDate[currentDate];
+              final sumOfAmountByCurrentDate = (expensesByCurrentDate ?? [])
+                  .map((expense) => expense.amount ?? 0)
+                  .fold(0, (prev, curr) => prev + curr);
+              final remainingBalance = dayBudget - sumOfAmountByCurrentDate;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 日付
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      _formatDateWithWeekday(currentDate),
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // 日付
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          _formatDateWithWeekday(currentDate),
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+                      // 1日の収支
+                      RemainingBalance(remainingBalance: remainingBalance),
+                    ],
                   ),
                   // 支出項目一覧
                   ...expensesByCurrentDate!.map((expense) {
@@ -113,5 +127,43 @@ class ExpenseList extends ConsumerWidget {
   String _formatDateWithWeekday(DateTime date) {
     final DateFormat formatter = DateFormat('M/d(E)', 'ja');
     return formatter.format(date);
+  }
+}
+
+/// 1日の収支
+class RemainingBalance extends StatelessWidget {
+  const RemainingBalance({
+    required this.remainingBalance,
+    super.key,
+  });
+
+  final int remainingBalance;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPositiveBalance = remainingBalance > 0;
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          Text(
+            isPositiveBalance ? '+' : '-',
+            style: TextStyle(
+              color: isPositiveBalance ? Colors.green : Colors.red,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '${remainingBalance.abs()}円',
+            style: TextStyle(
+              color: isPositiveBalance ? Colors.green : Colors.red,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
