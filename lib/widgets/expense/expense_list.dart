@@ -5,6 +5,7 @@ import 'package:daily_spend_tracker/widgets/expense/expense_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../utils/format.dart';
 
 class ExpenseList extends ConsumerWidget {
   const ExpenseList({
@@ -155,7 +156,9 @@ class RemainingBalance extends StatelessWidget {
             ),
           ),
           Text(
-            '${remainingBalance.abs()}円',
+            '${formatCommaSeparateNumber(
+              remainingBalance.abs().toString(),
+            )}円',
             style: TextStyle(
               color: isPositiveBalance ? Colors.green : Colors.red,
               fontSize: 22,
