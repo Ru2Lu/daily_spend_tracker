@@ -1,6 +1,6 @@
 import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
-import 'package:daily_spend_tracker/screens/expense_history_screen.dart';
 import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
+import 'package:daily_spend_tracker/screens/history_screen.dart';
 import 'package:daily_spend_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +24,7 @@ class MyApp extends ConsumerWidget {
     final screens = [
       const HomeScreen(),
       const ExpenseListScreen(),
-      const ExpenseHistoryScreen(),
+      const HistoryScreen(),
     ];
 
     final indexBottomNavbar = ref.watch(indexBottomNavbarProvider);
