@@ -46,7 +46,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('ホーム画面'),
       ),
       body: Center(
         child: Row(
