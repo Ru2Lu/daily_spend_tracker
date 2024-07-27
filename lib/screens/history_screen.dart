@@ -8,7 +8,6 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('履歴画面'),
       ),
       body: const Center(
         child: Text('履歴画面！！！'),
