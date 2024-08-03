@@ -48,8 +48,14 @@ class ExpenseListScreen extends ConsumerWidget {
       ),
       body: expensesAsyncValue.when(
         data: (expenses) {
+          // 今月の支出項目のみを取り出す
+          final thisMonthExpenses = (expenses ?? []).where((expense) {
+            final expenseCreatedDate = expense.createdDate;
+            return expenseCreatedDate.year == now.year &&
+                expenseCreatedDate.month == now.month;
+          }).toList();
           // 今日までの支出金額を計算
-          final expenseAmountsUntilToday = (expenses ?? [])
+          final expenseAmountsUntilToday = thisMonthExpenses
               .where((expense) =>
                   expense.date != null &&
                   expense.date!.year == now.year &&
@@ -70,7 +76,7 @@ class ExpenseListScreen extends ConsumerWidget {
               ThisMonthBalance(thisMonthBalance: thisMonthBalance),
               // 支出一覧リスト
               ExpenseList(
-                expensesAsyncValue: AsyncData(expenses),
+                expensesAsyncValue: AsyncData(thisMonthExpenses),
                 dayBudget: dayBudget,
               ),
             ],
