@@ -21,6 +21,11 @@ const MonthlyBudgetSchema = CollectionSchema(
       id: 0,
       name: r'budget',
       type: IsarType.long,
+    ),
+    r'date': PropertySchema(
+      id: 1,
+      name: r'date',
+      type: IsarType.dateTime,
     )
   },
   estimateSize: _monthlyBudgetEstimateSize,
@@ -53,6 +58,7 @@ void _monthlyBudgetSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.budget);
+  writer.writeDateTime(offsets[1], object.date);
 }
 
 MonthlyBudget _monthlyBudgetDeserialize(
@@ -63,6 +69,7 @@ MonthlyBudget _monthlyBudgetDeserialize(
 ) {
   final object = MonthlyBudget(
     budget: reader.readLongOrNull(offsets[0]),
+    date: reader.readDateTimeOrNull(offsets[1]),
     id: id,
   );
   return object;
@@ -77,6 +84,8 @@ P _monthlyBudgetDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readLongOrNull(offset)) as P;
+    case 1:
+      return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -250,6 +259,79 @@ extension MonthlyBudgetQueryFilter
     });
   }
 
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
+      dateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'date',
+      ));
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
+      dateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'date',
+      ));
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition> dateEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
+      dateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
+      dateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'date',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition> dateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'date',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -324,6 +406,18 @@ extension MonthlyBudgetQuerySortBy
       return query.addSortBy(r'budget', Sort.desc);
     });
   }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.desc);
+    });
+  }
 }
 
 extension MonthlyBudgetQuerySortThenBy
@@ -337,6 +431,18 @@ extension MonthlyBudgetQuerySortThenBy
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByBudgetDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'budget', Sort.desc);
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.asc);
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'date', Sort.desc);
     });
   }
 
@@ -360,6 +466,12 @@ extension MonthlyBudgetQueryWhereDistinct
       return query.addDistinctBy(r'budget');
     });
   }
+
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QDistinct> distinctByDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'date');
+    });
+  }
 }
 
 extension MonthlyBudgetQueryProperty
@@ -373,6 +485,12 @@ extension MonthlyBudgetQueryProperty
   QueryBuilder<MonthlyBudget, int?, QQueryOperations> budgetProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'budget');
+    });
+  }
+
+  QueryBuilder<MonthlyBudget, DateTime?, QQueryOperations> dateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'date');
     });
   }
 }

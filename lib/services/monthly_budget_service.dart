@@ -27,12 +27,18 @@ class MonthlyBudgetService {
   }
 
   // 今月の予算を保存
-  Future<void> saveMonthlyBudget(int? budget) async {
+  Future<void> saveMonthlyBudget(
+    int? budget,
+    DateTime? date,
+  ) async {
     await isar.writeTxn(() async {
       // 既存の予算を削除
       await isar.monthlyBudgets.clear();
       // 新しい予算を保存
-      final monthlyBudget = MonthlyBudget(budget: budget);
+      final monthlyBudget = MonthlyBudget(
+        budget: budget,
+        date: date,
+      );
       await isar.monthlyBudgets.put(monthlyBudget);
     });
   }

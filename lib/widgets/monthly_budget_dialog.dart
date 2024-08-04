@@ -93,6 +93,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
               ref.read(monthlyBudgetServiceProvider.future).then(
                     (service) => service.saveMonthlyBudget(
                       monthlyBudget,
+                      DateTime.now(),
                     ),
                   );
               Navigator.of(context).pop();
