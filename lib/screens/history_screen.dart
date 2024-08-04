@@ -12,7 +12,7 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.budget;
+    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.amount;
     final expensesAsyncValue = ref.watch(expensesProvider);
     final selectedYearMonth = ref.watch(selectedYearMonthProvider);
 

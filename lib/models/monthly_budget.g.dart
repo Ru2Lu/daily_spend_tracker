@@ -17,9 +17,9 @@ const MonthlyBudgetSchema = CollectionSchema(
   name: r'MonthlyBudget',
   id: -5743211326019024722,
   properties: {
-    r'budget': PropertySchema(
+    r'amount': PropertySchema(
       id: 0,
-      name: r'budget',
+      name: r'amount',
       type: IsarType.long,
     ),
     r'date': PropertySchema(
@@ -57,7 +57,7 @@ void _monthlyBudgetSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.budget);
+  writer.writeLong(offsets[0], object.amount);
   writer.writeDateTime(offsets[1], object.date);
 }
 
@@ -68,7 +68,7 @@ MonthlyBudget _monthlyBudgetDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = MonthlyBudget(
-    budget: reader.readLongOrNull(offsets[0]),
+    amount: reader.readLongOrNull(offsets[0]),
     date: reader.readDateTimeOrNull(offsets[1]),
     id: id,
   );
@@ -186,63 +186,63 @@ extension MonthlyBudgetQueryWhere
 extension MonthlyBudgetQueryFilter
     on QueryBuilder<MonthlyBudget, MonthlyBudget, QFilterCondition> {
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetIsNull() {
+      amountIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'budget',
+        property: r'amount',
       ));
     });
   }
 
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetIsNotNull() {
+      amountIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'budget',
+        property: r'amount',
       ));
     });
   }
 
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetEqualTo(int? value) {
+      amountEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'budget',
+        property: r'amount',
         value: value,
       ));
     });
   }
 
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetGreaterThan(
+      amountGreaterThan(
     int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'budget',
+        property: r'amount',
         value: value,
       ));
     });
   }
 
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetLessThan(
+      amountLessThan(
     int? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'budget',
+        property: r'amount',
         value: value,
       ));
     });
   }
 
   QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterFilterCondition>
-      budgetBetween(
+      amountBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -250,7 +250,7 @@ extension MonthlyBudgetQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'budget',
+        property: r'amount',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -395,15 +395,15 @@ extension MonthlyBudgetQueryLinks
 
 extension MonthlyBudgetQuerySortBy
     on QueryBuilder<MonthlyBudget, MonthlyBudget, QSortBy> {
-  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByBudget() {
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByAmount() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'budget', Sort.asc);
+      return query.addSortBy(r'amount', Sort.asc);
     });
   }
 
-  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByBudgetDesc() {
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> sortByAmountDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'budget', Sort.desc);
+      return query.addSortBy(r'amount', Sort.desc);
     });
   }
 
@@ -422,15 +422,15 @@ extension MonthlyBudgetQuerySortBy
 
 extension MonthlyBudgetQuerySortThenBy
     on QueryBuilder<MonthlyBudget, MonthlyBudget, QSortThenBy> {
-  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByBudget() {
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByAmount() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'budget', Sort.asc);
+      return query.addSortBy(r'amount', Sort.asc);
     });
   }
 
-  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByBudgetDesc() {
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QAfterSortBy> thenByAmountDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'budget', Sort.desc);
+      return query.addSortBy(r'amount', Sort.desc);
     });
   }
 
@@ -461,9 +461,9 @@ extension MonthlyBudgetQuerySortThenBy
 
 extension MonthlyBudgetQueryWhereDistinct
     on QueryBuilder<MonthlyBudget, MonthlyBudget, QDistinct> {
-  QueryBuilder<MonthlyBudget, MonthlyBudget, QDistinct> distinctByBudget() {
+  QueryBuilder<MonthlyBudget, MonthlyBudget, QDistinct> distinctByAmount() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'budget');
+      return query.addDistinctBy(r'amount');
     });
   }
 
@@ -482,9 +482,9 @@ extension MonthlyBudgetQueryProperty
     });
   }
 
-  QueryBuilder<MonthlyBudget, int?, QQueryOperations> budgetProperty() {
+  QueryBuilder<MonthlyBudget, int?, QQueryOperations> amountProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'budget');
+      return query.addPropertyName(r'amount');
     });
   }
 

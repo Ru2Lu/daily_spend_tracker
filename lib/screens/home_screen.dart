@@ -22,7 +22,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             await ref.read(monthlyBudgetServiceProvider.future).then(
                   (service) => service.getMonthlyBudget(),
                 );
-        if (monthlyBudget?.budget == null) {
+        if (monthlyBudget?.amount == null) {
           _showMonthlyBudgetDialog();
         }
       },
@@ -41,7 +41,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.budget;
+    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.amount;
 
     return Scaffold(
       appBar: AppBar(

@@ -6,13 +6,13 @@ part 'monthly_budget.g.dart';
 class MonthlyBudget {
   MonthlyBudget({
     this.id = Isar.autoIncrement,
-    required this.budget,
+    required this.amount,
     required this.date,
   });
 
   final Id id;
 
-  final int? budget;
+  final int? amount;
 
   final DateTime? date;
 }

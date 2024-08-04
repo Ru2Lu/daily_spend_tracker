@@ -28,7 +28,7 @@ class MonthlyBudgetService {
 
   // 今月の予算を保存
   Future<void> saveMonthlyBudget(
-    int? budget,
+    int? amount,
     DateTime? date,
   ) async {
     await isar.writeTxn(() async {
@@ -36,7 +36,7 @@ class MonthlyBudgetService {
       await isar.monthlyBudgets.clear();
       // 新しい予算を保存
       final monthlyBudget = MonthlyBudget(
-        budget: budget,
+        amount: amount,
         date: date,
       );
       await isar.monthlyBudgets.put(monthlyBudget);
