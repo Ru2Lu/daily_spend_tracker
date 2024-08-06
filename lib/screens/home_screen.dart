@@ -20,7 +20,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         // 今月の予算が未入力の場合はダイアログを表示する
         final monthlyBudget =
             await ref.read(monthlyBudgetServiceProvider.future).then(
-                  (service) => service.getMonthlyBudget(),
+                  (service) => service.getCurrentMonthBudget(),
                 );
         if (monthlyBudget?.amount == null) {
           _showMonthlyBudgetDialog();

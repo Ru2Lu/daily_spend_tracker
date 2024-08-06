@@ -12,7 +12,7 @@ class MonthlyBudget {
 
   final Id id;
 
-  final int? amount;
+  int? amount;
 
-  final DateTime? date;
+  DateTime? date;
 }

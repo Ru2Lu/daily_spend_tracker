@@ -91,10 +91,7 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
                 controller.text.replaceAll(',', ''),
               );
               ref.read(monthlyBudgetServiceProvider.future).then(
-                    (service) => service.saveMonthlyBudget(
-                      monthlyBudget,
-                      DateTime.now(),
-                    ),
+                    (service) => service.saveMonthlyBudget(monthlyBudget),
                   );
               Navigator.of(context).pop();
             }
