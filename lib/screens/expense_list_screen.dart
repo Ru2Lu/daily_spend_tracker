@@ -14,10 +14,18 @@ class ExpenseListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.amount;
+    final now = DateTime.now();
+    final monthlyBudget = ref
+        .watch(
+          monthlyBudgetProvider(
+            now.year,
+            now.month,
+          ),
+        )
+        .value
+        ?.amount;
     final expensesAsyncValue = ref.watch(expensesProvider);
 
-    final now = DateTime.now();
     // 今月の日数
     final daysInThisMonth = DateUtils.getDaysInMonth(
       now.year,

@@ -1,6 +1,7 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:daily_spend_tracker/providers/selected_year_month_provider.dart';
+import 'package:daily_spend_tracker/utils/format.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -12,9 +13,27 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.amount;
-    final expensesAsyncValue = ref.watch(expensesProvider);
     final selectedYearMonth = ref.watch(selectedYearMonthProvider);
+    final monthlyBudget = ref
+        .watch(
+          monthlyBudgetProvider(
+            selectedYearMonth.year,
+            selectedYearMonth.month,
+          ),
+        )
+        .value
+        ?.amount;
+    // フィルターと同じ年月の支出項目のみを取り出す
+    final expenses = (ref.watch(expensesProvider).value ?? []).where((expense) {
+      final expenseCreatedDate = expense.createdDate;
+      return expenseCreatedDate.year == selectedYearMonth.year &&
+          expenseCreatedDate.month == selectedYearMonth.month;
+    }).toList();
+
+    final spending = expenses.fold(
+      0,
+      (prev, expense) => prev + (expense.amount ?? 0),
+    );
 
     final now = DateTime.now();
     // 今月の日数
@@ -69,37 +88,27 @@ class HistoryScreen extends ConsumerWidget {
             ),
           ),
 
+          /// 月の概要
+          MonthSummary(
+            budget: monthlyBudget ?? 0,
+            spending: spending,
+          ),
+
           /// 支出一覧
           Expanded(
-            child: expensesAsyncValue.when(
-              data: (expenses) {
-                // フィルターと同じ年月の支出項目のみを取り出す
-                final filteredExpenses = (expenses ?? []).where((expense) {
-                  final expenseCreatedDate = expense.createdDate;
-                  return expenseCreatedDate.year == selectedYearMonth.year &&
-                      expenseCreatedDate.month == selectedYearMonth.month;
-                }).toList();
-                return filteredExpenses.isEmpty
-                    ? const Center(
-                        child: Text('履歴がありません'),
-                      )
-                    : Column(
-                        children: [
-                          // 支出一覧リスト
-                          ExpenseList(
-                            expensesAsyncValue: AsyncData(filteredExpenses),
-                            dayBudget: dayBudget,
-                          ),
-                        ],
-                      );
-              },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              error: (err, stack) => const Center(
-                child: Text('エラーが発生しました'),
-              ),
-            ),
+            child: expenses.isEmpty
+                ? const Center(
+                    child: Text('履歴がありません'),
+                  )
+                : Column(
+                    children: [
+                      // 支出一覧リスト
+                      ExpenseList(
+                        expensesAsyncValue: AsyncData(expenses),
+                        dayBudget: dayBudget,
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -124,4 +133,84 @@ class YearMonth extends DatePickerModel {
 
   @override
   List<int> layoutProportions() => [1, 1, 0];
+}
+
+/// 月の概要
+class MonthSummary extends StatelessWidget {
+  const MonthSummary({
+    required this.budget,
+    required this.spending,
+    super.key,
+  });
+
+  final int budget;
+
+  final int spending;
+
+  @override
+  Widget build(BuildContext context) {
+    final balance = budget - spending;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              /// 予算
+              Text(
+                '${formatCommaSeparateNumber(
+                  budget.toString(),
+                )}円',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const Text(
+                '-',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              /// 支出
+              Text(
+                '${formatCommaSeparateNumber(
+                  spending.toString(),
+                )}円',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const Text(
+                '=',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              /// 収支
+              Text(
+                '${formatCommaSeparateNumber(
+                  balance.toString(),
+                )}円',
+                style: TextStyle(
+                  color: balance > 0 ? Colors.green : Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

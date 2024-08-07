@@ -17,10 +17,14 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        final now = DateTime.now();
         // 今月の予算が未入力の場合はダイアログを表示する
         final monthlyBudget =
             await ref.read(monthlyBudgetServiceProvider.future).then(
-                  (service) => service.getCurrentMonthBudget(),
+                  (service) => service.getMonthlyBudgetByYearMonth(
+                    year: now.year,
+                    month: now.month,
+                  ),
                 );
         if (monthlyBudget?.amount == null) {
           _showMonthlyBudgetDialog();
@@ -41,7 +45,16 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final monthlyBudget = ref.watch(monthlyBudgetProvider).value?.amount;
+    final now = DateTime.now();
+    final monthlyBudget = ref
+        .watch(
+          monthlyBudgetProvider(
+            now.year,
+            now.month,
+          ),
+        )
+        .value
+        ?.amount;
 
     return Scaffold(
       appBar: AppBar(

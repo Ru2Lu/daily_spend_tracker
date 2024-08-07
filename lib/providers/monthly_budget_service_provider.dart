@@ -16,7 +16,12 @@ Future<MonthlyBudgetService> monthlyBudgetService(
 @riverpod
 Stream<MonthlyBudget?> monthlyBudget(
   MonthlyBudgetRef ref,
+  int year,
+  int month,
 ) async* {
   final service = await ref.watch(monthlyBudgetServiceProvider.future);
-  yield* service.watchMonthlyBudget();
+  yield* service.watchMonthlyBudgetByYearMonth(
+    year: year,
+    month: month,
+  );
 }

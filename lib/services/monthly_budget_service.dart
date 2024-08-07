@@ -8,21 +8,23 @@ class MonthlyBudgetService {
 
   final Isar isar;
 
-  // 今月の予算を取得
-  Future<MonthlyBudget?> getCurrentMonthBudget() async {
-    final now = DateTime.now();
+  // 指定した年月の予算を取得
+  Future<MonthlyBudget?> getMonthlyBudgetByYearMonth({
+    required int year,
+    required int month,
+  }) async {
     final currentMonthBudget = await isar.monthlyBudgets
         .filter()
         .dateGreaterThan(
-          DateTime(now.year, now.month, 1).subtract(
+          DateTime(year, month, 1).subtract(
             const Duration(days: 1),
           ),
         )
         .and()
         .dateLessThan(
           DateTime(
-            now.year,
-            now.month + 1,
+            year,
+            month + 1,
             1,
           ),
         )
@@ -31,21 +33,23 @@ class MonthlyBudgetService {
     return currentMonthBudget;
   }
 
-  // 今月の予算を監視
-  Stream<MonthlyBudget?> watchMonthlyBudget() async* {
-    final now = DateTime.now();
+  // 指定した年月の予算を返す
+  Stream<MonthlyBudget?> watchMonthlyBudgetByYearMonth({
+    required int year,
+    required int month,
+  }) async* {
     final query = isar.monthlyBudgets
         .filter()
         .dateGreaterThan(
-          DateTime(now.year, now.month, 1).subtract(
+          DateTime(year, month, 1).subtract(
             const Duration(days: 1),
           ),
         )
         .and()
         .dateLessThan(
           DateTime(
-            now.year,
-            now.month + 1,
+            year,
+            month + 1,
             1,
           ),
         );
@@ -53,8 +57,6 @@ class MonthlyBudgetService {
     await for (final results in query.watch(fireImmediately: true)) {
       if (results.isNotEmpty) {
         yield results.first;
-      } else {
-        yield null;
       }
     }
   }
@@ -64,7 +66,11 @@ class MonthlyBudgetService {
     int? amount,
   ) async {
     await isar.writeTxn(() async {
-      final oldMonthBudget = await getCurrentMonthBudget();
+      final now = DateTime.now();
+      final oldMonthBudget = await getMonthlyBudgetByYearMonth(
+        year: now.year,
+        month: now.month,
+      );
       if (oldMonthBudget != null) {
         // 既存の予算を更新
         oldMonthBudget.amount = amount;
