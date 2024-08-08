@@ -106,6 +106,7 @@ class HistoryScreen extends ConsumerWidget {
                       ExpenseList(
                         expensesAsyncValue: AsyncData(expenses),
                         dayBudget: dayBudget,
+                        canEditAndDelete: false,
                       ),
                     ],
                   ),

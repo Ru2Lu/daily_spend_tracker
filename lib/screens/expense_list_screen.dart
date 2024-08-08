@@ -86,6 +86,7 @@ class ExpenseListScreen extends ConsumerWidget {
               ExpenseList(
                 expensesAsyncValue: AsyncData(thisMonthExpenses),
                 dayBudget: dayBudget,
+                canEditAndDelete: true,
               ),
             ],
           );

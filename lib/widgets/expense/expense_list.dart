@@ -11,12 +11,15 @@ class ExpenseList extends ConsumerWidget {
   const ExpenseList({
     required this.expensesAsyncValue,
     required this.dayBudget,
+    required this.canEditAndDelete,
     super.key,
   });
 
   final AsyncValue<List<Expense>?> expensesAsyncValue;
 
   final int dayBudget;
+
+  final bool canEditAndDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,20 +72,25 @@ class ExpenseList extends ConsumerWidget {
                       title: expense.title ?? '',
                       amount: expense.amount.toString(),
                       editExpense: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (BuildContext context) {
-                            return ExpenseBottomSheet(expense: expense);
-                          },
-                        );
+                        if (canEditAndDelete) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return ExpenseBottomSheet(expense: expense);
+                            },
+                          );
+                        }
                       },
                       deleteExpense: () async {
-                        final expenseService =
-                            await ref.read(expenseServiceProvider.future);
-                        // 削除
-                        await expenseService.deleteExpense(expense.id);
+                        if (canEditAndDelete) {
+                          final expenseService =
+                              await ref.read(expenseServiceProvider.future);
+                          // 削除
+                          await expenseService.deleteExpense(expense.id);
+                        }
                       },
+                      canEditAndDelete: canEditAndDelete,
                     );
                   }),
                 ],
