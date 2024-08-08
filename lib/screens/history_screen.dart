@@ -1,6 +1,7 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:daily_spend_tracker/providers/selected_year_month_provider.dart';
+import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/utils/format.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,19 @@ class HistoryScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: Column(
         children: [

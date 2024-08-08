@@ -1,5 +1,6 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,19 @@ class ExpenseListScreen extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
       ),
       body: expensesAsyncValue.when(
         data: (expenses) {
