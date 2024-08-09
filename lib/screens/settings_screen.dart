@@ -7,11 +7,31 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('設定画面'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: const Center(
-        child: Text('設定画面'),
+      body: const Column(
+        children: [
+          ListTile(
+            title: Text(
+              'プライバシーポリシー',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            leading: Icon(Icons.shield),
+            trailing: Icon(Icons.arrow_forward_ios),
+          ),
+          ListTile(
+            title: Text(
+              '全てのデータを削除する',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            leading: Icon(Icons.delete),
+          ),
+        ],
       ),
     );
   }
