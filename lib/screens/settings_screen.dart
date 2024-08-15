@@ -1,11 +1,14 @@
+import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
+import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -27,15 +30,60 @@ class SettingsScreen extends StatelessWidget {
               await launchUrl(url);
             },
           ),
-          const ListTile(
-            title: Text(
+          ListTile(
+            title: const Text(
               '全てのデータを削除する',
               style: TextStyle(
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            leading: Icon(Icons.delete),
+            leading: const Icon(Icons.delete),
+            onTap: () async {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text(
+                      '本当にデータを削除しますか？\n一度削除されたデータは元に戻すことが出来ません。',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('キャンセル'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final expenseService =
+                              await ref.read(expenseServiceProvider.future);
+                          final monthlyBudgetService = await ref
+                              .read(monthlyBudgetServiceProvider.future);
+                          // 全ての支出を削除
+                          await expenseService.deleteAllExpenses();
+                          // 全ての月の予算を削除
+                          await monthlyBudgetService.deleteAllMonthlyBudgets();
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text(
+                          '削除',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ],
       ),

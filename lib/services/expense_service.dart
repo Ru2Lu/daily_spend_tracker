@@ -65,4 +65,11 @@ class ExpenseService {
       }
     });
   }
+
+  // 全ての支出を削除
+  Future<void> deleteAllExpenses() async {
+    await isar.writeTxn(() async {
+      await isar.expenses.where().deleteAll();
+    });
+  }
 }

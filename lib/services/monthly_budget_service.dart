@@ -86,4 +86,11 @@ class MonthlyBudgetService {
       }
     });
   }
+
+  // 全ての月の予算を削除
+  Future<void> deleteAllMonthlyBudgets() async {
+    await isar.writeTxn(() async {
+      await isar.monthlyBudgets.where().deleteAll();
+    });
+  }
 }
