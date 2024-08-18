@@ -1,4 +1,5 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
+import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
 import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,6 +70,13 @@ class SettingsScreen extends ConsumerWidget {
                           // 全ての月の予算を削除
                           await monthlyBudgetService.deleteAllMonthlyBudgets();
                           if (context.mounted) {
+                            // データ削除後にホーム画面のタブに変更する
+                            ref
+                                .read(indexBottomNavbarProvider.notifier)
+                                .setIndexBottomNavbar(0);
+                            // ダイアログを閉じる
+                            Navigator.pop(context);
+                            // 設定画面を閉じてホーム画面に戻る
                             Navigator.pop(context);
                           }
                         },

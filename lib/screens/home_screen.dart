@@ -18,23 +18,27 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        final now = DateTime.now();
-        // 今月の予算が未入力の場合はダイアログを表示する
-        final monthlyBudget =
-            await ref.read(monthlyBudgetServiceProvider.future).then(
-                  (service) => service.getMonthlyBudgetByYearMonth(
-                    year: now.year,
-                    month: now.month,
-                  ),
-                );
-        if (monthlyBudget?.amount == null) {
-          _showMonthlyBudgetDialog();
-        }
+        _showMonthlyBudgetDialog();
       },
     );
   }
 
   Future<void> _showMonthlyBudgetDialog({int? monthlyBudget}) async {
+    final now = DateTime.now();
+    // 今月の予算が未入力の場合はダイアログを表示する
+    final monthlyBudget =
+        await ref.read(monthlyBudgetServiceProvider.future).then(
+              (service) => service.getMonthlyBudgetByYearMonth(
+                year: now.year,
+                month: now.month,
+              ),
+            );
+    if (monthlyBudget?.amount == null) {
+      _showDialog();
+    }
+  }
+
+  Future<void> _showDialog({int? monthlyBudget}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -62,13 +66,14 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SettingsScreen(),
                 ),
               );
+              _showMonthlyBudgetDialog();
             },
             icon: const Icon(Icons.settings),
           ),
