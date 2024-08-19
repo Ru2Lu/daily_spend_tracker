@@ -18,12 +18,12 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        _showMonthlyBudgetDialog();
+        _showDialogOnMissingMonthlyBudget();
       },
     );
   }
 
-  Future<void> _showMonthlyBudgetDialog({int? monthlyBudget}) async {
+  Future<void> _showDialogOnMissingMonthlyBudget() async {
     final now = DateTime.now();
     // 今月の予算が未入力の場合はダイアログを表示する
     final monthlyBudget =
@@ -73,31 +73,56 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                   builder: (context) => const SettingsScreen(),
                 ),
               );
-              _showMonthlyBudgetDialog();
+              _showDialogOnMissingMonthlyBudget();
             },
             icon: const Icon(Icons.settings),
           ),
         ],
       ),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              monthlyBudget != null
-                  ? '今月使用できる金額は${formatCommaSeparateNumber(
-                      monthlyBudget.toString(),
-                    )}円です'
-                  : '今月使用できる金額は-円です',
-            ),
-            IconButton(
-              onPressed: () {
-                _showMonthlyBudgetDialog(monthlyBudget: monthlyBudget);
-              },
-              icon: const Icon(Icons.edit),
-            )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '今月の予算',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      monthlyBudget != null
+                          ? formatCommaSeparateNumber(
+                              monthlyBudget.toString(),
+                            )
+                          : '-',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 45,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                  const Text('円'),
+                  IconButton(
+                    onPressed: () {
+                      _showDialog(monthlyBudget: monthlyBudget);
+                    },
+                    icon: const Icon(Icons.edit),
+                    iconSize: 30,
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
