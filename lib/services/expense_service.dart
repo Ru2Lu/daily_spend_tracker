@@ -66,6 +66,21 @@ class ExpenseService {
     });
   }
 
+  // 過去3ヶ月以前の支出を削除
+  Future<void> deleteOldExpenses() async {
+    await isar.writeTxn(() async {
+      final now = DateTime.now();
+      final threeMonthsAgo = DateTime(
+        now.year,
+        now.month - 3,
+        1,
+      );
+
+      // 3ヶ月以上前の予算データを削除
+      await isar.expenses.filter().dateLessThan(threeMonthsAgo).deleteAll();
+    });
+  }
+
   // 全ての支出を削除
   Future<void> deleteAllExpenses() async {
     await isar.writeTxn(() async {

@@ -87,6 +87,24 @@ class MonthlyBudgetService {
     });
   }
 
+  // 過去3ヶ月以前の月の予算を削除
+  Future<void> deleteOldMonthlyBudgets() async {
+    await isar.writeTxn(() async {
+      final now = DateTime.now();
+      final threeMonthsAgo = DateTime(
+        now.year,
+        now.month - 3,
+        1,
+      );
+
+      // 3ヶ月以上前の予算データを削除
+      await isar.monthlyBudgets
+          .filter()
+          .dateLessThan(threeMonthsAgo)
+          .deleteAll();
+    });
+  }
+
   // 全ての月の予算を削除
   Future<void> deleteAllMonthlyBudgets() async {
     await isar.writeTxn(() async {
