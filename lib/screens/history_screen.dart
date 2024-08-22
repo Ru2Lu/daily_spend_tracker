@@ -26,9 +26,9 @@ class HistoryScreen extends ConsumerWidget {
         ?.amount;
     // フィルターと同じ年月の支出項目のみを取り出す
     final expenses = (ref.watch(expensesProvider).value ?? []).where((expense) {
-      final expenseCreatedDate = expense.createdDate;
-      return expenseCreatedDate.year == selectedYearMonth.year &&
-          expenseCreatedDate.month == selectedYearMonth.month;
+      final expenseDate = expense.date;
+      return expenseDate!.year == selectedYearMonth.year &&
+          expenseDate.month == selectedYearMonth.month;
     }).toList();
 
     final spending = expenses.fold(
