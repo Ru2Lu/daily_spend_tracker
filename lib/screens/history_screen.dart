@@ -81,10 +81,10 @@ class HistoryScreen extends ConsumerWidget {
                     selectedYearMonth.month,
                     1,
                   ),
-                  // 過去2ヶ月分までの履歴を確認できる
+                  // 過去3ヶ月分までの履歴を確認できる
                   minTime: DateTime(
                     now.year,
-                    now.month - 2,
+                    now.month - 3,
                     1,
                   ),
                   maxTime: DateTime(
