@@ -86,14 +86,20 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
                   .read(dialogErrorMessageProvider.notifier)
                   .setDialogErrorMessage('金額を入力してください');
             } else {
-              // 金額が入力されてる場合はダイアログを閉じる
               final monthlyBudget = int.tryParse(
                 controller.text.replaceAll(',', ''),
               );
-              ref.read(monthlyBudgetServiceProvider.future).then(
-                    (service) => service.saveMonthlyBudget(monthlyBudget),
-                  );
-              Navigator.of(context).pop();
+              if ((monthlyBudget ?? 0) <= 0) {
+                ref
+                    .read(dialogErrorMessageProvider.notifier)
+                    .setDialogErrorMessage('金額を入力してください');
+              } else {
+                // 金額が入力されてる場合はダイアログを閉じる
+                ref.read(monthlyBudgetServiceProvider.future).then(
+                      (service) => service.saveMonthlyBudget(monthlyBudget),
+                    );
+                Navigator.of(context).pop();
+              }
             }
           },
           child: const Text('確定'),
