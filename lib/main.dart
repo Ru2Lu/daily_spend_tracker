@@ -1,4 +1,6 @@
+import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
+import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
 import 'package:daily_spend_tracker/screens/history_screen.dart';
 import 'package:daily_spend_tracker/screens/home_screen.dart';
@@ -14,13 +16,48 @@ void main() {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    // アプリのライフサイクルの監視を開始
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await _deleteOldData();
+    }
+  }
+
+  @override
+  void dispose() {
+    // アプリのライフサイクルの監視を終了
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> _deleteOldData() async {
+    await ref.read(monthlyBudgetServiceProvider.future).then(
+          (service) => service.deleteOldMonthlyBudgets(),
+        );
+    await ref.read(expenseServiceProvider.future).then(
+          (service) => service.deleteOldExpenses(),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final screens = [
       const HomeScreen(),
       const ExpenseListScreen(),

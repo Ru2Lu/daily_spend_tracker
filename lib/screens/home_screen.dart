@@ -1,4 +1,3 @@
-import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,43 +17,12 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    // アプリのライフサイクルの監視を開始
-    WidgetsBinding.instance.addObserver(this);
-    _initialize();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      await _deleteOldData();
-    }
-  }
-
-  @override
-  void dispose() {
-    // アプリのライフサイクルの監視を終了
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  Future<void> _initialize() async {
-    // 過去3ヶ月以前のデータを削除する
-    await _deleteOldData();
     // 今月の予算が入力されていない場合はダイアログを表示
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         await _showDialogOnMissingMonthlyBudget();
       },
     );
-  }
-
-  Future<void> _deleteOldData() async {
-    await ref.read(monthlyBudgetServiceProvider.future).then(
-          (service) => service.deleteOldMonthlyBudgets(),
-        );
-    await ref.read(expenseServiceProvider.future).then(
-          (service) => service.deleteOldExpenses(),
-        );
   }
 
   Future<void> _showDialogOnMissingMonthlyBudget() async {
