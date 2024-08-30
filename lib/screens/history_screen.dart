@@ -103,10 +103,11 @@ class HistoryScreen extends ConsumerWidget {
           ),
 
           /// 月の概要
-          MonthSummary(
-            budget: monthlyBudget ?? 0,
-            spending: spending,
-          ),
+          if (monthlyBudget != null)
+            MonthSummary(
+              budget: monthlyBudget,
+              spending: spending,
+            ),
 
           /// 支出一覧
           Expanded(
