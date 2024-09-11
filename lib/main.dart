@@ -1,6 +1,6 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
-import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
 import 'package:daily_spend_tracker/screens/history_screen.dart';
 import 'package:daily_spend_tracker/screens/home_screen.dart';
@@ -48,8 +48,8 @@ class MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   }
 
   Future<void> _deleteOldData() async {
-    await ref.read(monthlyBudgetServiceProvider.future).then(
-          (service) => service.deleteOldMonthlyBudgets(),
+    await ref.read(budgetServiceProvider.future).then(
+          (service) => service.deleteOldBudgets(),
         );
     await ref.read(expenseServiceProvider.future).then(
           (service) => service.deleteOldExpenses(),

@@ -1,19 +1,19 @@
 import 'package:isar/isar.dart';
-import '../models/monthly_budget.dart';
+import '../models/budget.dart';
 
-class MonthlyBudgetService {
-  const MonthlyBudgetService(
+class BudgetService {
+  const BudgetService(
     this.isar,
   );
 
   final Isar isar;
 
   // 指定した年月の予算を取得
-  Future<MonthlyBudget?> getMonthlyBudgetByYearMonth({
+  Future<Budget?> getBudgetByYearMonth({
     required int year,
     required int month,
   }) async {
-    final currentMonthBudget = await isar.monthlyBudgets
+    final currentMonthBudget = await isar.budgets
         .filter()
         .dateGreaterThan(
           DateTime(year, month, 1).subtract(
@@ -34,11 +34,11 @@ class MonthlyBudgetService {
   }
 
   // 指定した年月の予算を返す
-  Stream<MonthlyBudget?> watchMonthlyBudgetByYearMonth({
+  Stream<Budget?> watchBudgetByYearMonth({
     required int year,
     required int month,
   }) async* {
-    final query = isar.monthlyBudgets
+    final query = isar.budgets
         .filter()
         .dateGreaterThan(
           DateTime(year, month, 1).subtract(
@@ -62,12 +62,12 @@ class MonthlyBudgetService {
   }
 
   // 今月の予算を保存
-  Future<void> saveMonthlyBudget(
+  Future<void> saveBudget(
     int? amount,
   ) async {
     await isar.writeTxn(() async {
       final now = DateTime.now();
-      final oldMonthBudget = await getMonthlyBudgetByYearMonth(
+      final oldMonthBudget = await getBudgetByYearMonth(
         year: now.year,
         month: now.month,
       );
@@ -75,20 +75,20 @@ class MonthlyBudgetService {
         // 既存の予算を更新
         oldMonthBudget.amount = amount;
         oldMonthBudget.date = DateTime.now();
-        await isar.monthlyBudgets.put(oldMonthBudget);
+        await isar.budgets.put(oldMonthBudget);
       } else {
         // 新しい予算を保存
-        final newMonthlyBudget = MonthlyBudget(
+        final newBudget = Budget(
           amount: amount,
           date: DateTime.now(),
         );
-        await isar.monthlyBudgets.put(newMonthlyBudget);
+        await isar.budgets.put(newBudget);
       }
     });
   }
 
   // 過去3ヶ月以前の月の予算を削除
-  Future<void> deleteOldMonthlyBudgets() async {
+  Future<void> deleteOldBudgets() async {
     await isar.writeTxn(() async {
       final now = DateTime.now();
       final threeMonthsAgo = DateTime(
@@ -98,17 +98,14 @@ class MonthlyBudgetService {
       );
 
       // 3ヶ月以上前の予算データを削除
-      await isar.monthlyBudgets
-          .filter()
-          .dateLessThan(threeMonthsAgo)
-          .deleteAll();
+      await isar.budgets.filter().dateLessThan(threeMonthsAgo).deleteAll();
     });
   }
 
   // 全ての月の予算を削除
-  Future<void> deleteAllMonthlyBudgets() async {
+  Future<void> deleteAllBudgets() async {
     await isar.writeTxn(() async {
-      await isar.monthlyBudgets.where().deleteAll();
+      await isar.budgets.where().deleteAll();
     });
   }
 }

@@ -1,6 +1,6 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
-import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,12 +63,12 @@ class SettingsScreen extends ConsumerWidget {
                         onPressed: () async {
                           final expenseService =
                               await ref.read(expenseServiceProvider.future);
-                          final monthlyBudgetService = await ref
-                              .read(monthlyBudgetServiceProvider.future);
+                          final budgetService =
+                              await ref.read(budgetServiceProvider.future);
                           // 全ての支出を削除
                           await expenseService.deleteAllExpenses();
                           // 全ての月の予算を削除
-                          await monthlyBudgetService.deleteAllMonthlyBudgets();
+                          await budgetService.deleteAllBudgets();
                           if (context.mounted) {
                             // データ削除後にホーム画面のタブに変更する
                             ref

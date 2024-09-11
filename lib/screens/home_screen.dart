@@ -2,8 +2,8 @@ import 'package:daily_spend_tracker/providers/expense/expense_service_provider.d
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/monthly_budget_dialog.dart';
-import '../providers/monthly_budget_service_provider.dart';
+import '../widgets/budget_dialog.dart';
+import '../providers/budget_service_provider.dart';
 import '../utils/format.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -23,41 +23,40 @@ class HomeScreenState extends ConsumerState<HomeScreen>
         // 古いデータを削除
         await _deleteOldData();
         // 今月の予算が入力されていない場合はダイアログを表示
-        await _showDialogOnMissingMonthlyBudget();
+        await _showDialogOnMissingBudget();
       },
     );
   }
 
   Future<void> _deleteOldData() async {
-    await ref.read(monthlyBudgetServiceProvider.future).then(
-          (service) => service.deleteOldMonthlyBudgets(),
+    await ref.read(budgetServiceProvider.future).then(
+          (service) => service.deleteOldBudgets(),
         );
     await ref.read(expenseServiceProvider.future).then(
           (service) => service.deleteOldExpenses(),
         );
   }
 
-  Future<void> _showDialogOnMissingMonthlyBudget() async {
+  Future<void> _showDialogOnMissingBudget() async {
     final now = DateTime.now();
     // 今月の予算が未入力の場合はダイアログを表示する
-    final monthlyBudget =
-        await ref.read(monthlyBudgetServiceProvider.future).then(
-              (service) => service.getMonthlyBudgetByYearMonth(
-                year: now.year,
-                month: now.month,
-              ),
-            );
-    if (monthlyBudget?.amount == null) {
+    final budget = await ref.read(budgetServiceProvider.future).then(
+          (service) => service.getBudgetByYearMonth(
+            year: now.year,
+            month: now.month,
+          ),
+        );
+    if (budget?.amount == null) {
       _showDialog();
     }
   }
 
-  Future<void> _showDialog({int? monthlyBudget}) async {
+  Future<void> _showDialog({int? budget}) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return MonthlyBudgetDialog(initialValue: monthlyBudget);
+        return BudgetDialog(initialValue: budget);
       },
     );
   }
@@ -65,9 +64,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final monthlyBudget = ref
+    final budget = ref
         .watch(
-          monthlyBudgetProvider(
+          budgetProvider(
             now.year,
             now.month,
           ),
@@ -87,7 +86,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   builder: (context) => const SettingsScreen(),
                 ),
               );
-              _showDialogOnMissingMonthlyBudget();
+              _showDialogOnMissingBudget();
             },
             icon: const Icon(Icons.settings),
           ),
@@ -112,9 +111,9 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                 children: [
                   Expanded(
                     child: Text(
-                      monthlyBudget != null
+                      budget != null
                           ? formatCommaSeparateNumber(
-                              monthlyBudget.toString(),
+                              budget.toString(),
                             )
                           : '-',
                       style: const TextStyle(
@@ -128,7 +127,7 @@ class HomeScreenState extends ConsumerState<HomeScreen>
                   const Text('円'),
                   IconButton(
                     onPressed: () {
-                      _showDialog(monthlyBudget: monthlyBudget);
+                      _showDialog(budget: budget);
                     },
                     icon: const Icon(Icons.edit),
                     iconSize: 30,

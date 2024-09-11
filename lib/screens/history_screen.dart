@@ -1,5 +1,5 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
-import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/providers/selected_year_month_provider.dart';
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/utils/format.dart';
@@ -15,9 +15,9 @@ class HistoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedYearMonth = ref.watch(selectedYearMonthProvider);
-    final monthlyBudget = ref
+    final budget = ref
         .watch(
-          monthlyBudgetProvider(
+          budgetProvider(
             selectedYearMonth.year,
             selectedYearMonth.month,
           ),
@@ -43,7 +43,7 @@ class HistoryScreen extends ConsumerWidget {
       now.month,
     );
     // 今日使用出来る金額
-    final dayBudget = ((monthlyBudget ?? 0) / daysInThisMonth).floor();
+    final dayBudget = ((budget ?? 0) / daysInThisMonth).floor();
 
     return Scaffold(
       appBar: AppBar(
@@ -103,9 +103,9 @@ class HistoryScreen extends ConsumerWidget {
           ),
 
           /// 月の概要
-          if (monthlyBudget != null)
+          if (budget != null)
             MonthSummary(
-              budget: monthlyBudget,
+              budget: budget,
               spending: spending,
             ),
 

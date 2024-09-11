@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
 
-part 'monthly_budget.g.dart';
+part 'budget.g.dart';
 
 @collection
-class MonthlyBudget {
-  MonthlyBudget({
+class Budget {
+  Budget({
     this.id = Isar.autoIncrement,
     required this.amount,
     required this.date,

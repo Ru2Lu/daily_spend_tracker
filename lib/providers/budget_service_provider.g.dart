@@ -1,29 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'monthly_budget_service_provider.dart';
+part of 'budget_service_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$monthlyBudgetServiceHash() =>
-    r'f24960a5dc49ac3897fc4bda1c247ad5b8d6bba8';
+String _$budgetServiceHash() => r'fb617021e135810c856be6fa21f1f166d35bb338';
 
-/// See also [monthlyBudgetService].
-@ProviderFor(monthlyBudgetService)
-final monthlyBudgetServiceProvider =
-    FutureProvider<MonthlyBudgetService>.internal(
-  monthlyBudgetService,
-  name: r'monthlyBudgetServiceProvider',
+/// See also [budgetService].
+@ProviderFor(budgetService)
+final budgetServiceProvider = FutureProvider<BudgetService>.internal(
+  budgetService,
+  name: r'budgetServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$monthlyBudgetServiceHash,
+      : _$budgetServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef MonthlyBudgetServiceRef = FutureProviderRef<MonthlyBudgetService>;
-String _$monthlyBudgetHash() => r'c747e1afc8a1bdf38fe71fa188343821f55cfef7';
+typedef BudgetServiceRef = FutureProviderRef<BudgetService>;
+String _$budgetHash() => r'a35bb24367d0a4216b350ef29fd191e2faefb1a9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,29 +44,29 @@ class _SystemHash {
   }
 }
 
-/// See also [monthlyBudget].
-@ProviderFor(monthlyBudget)
-const monthlyBudgetProvider = MonthlyBudgetFamily();
+/// See also [budget].
+@ProviderFor(budget)
+const budgetProvider = BudgetFamily();
 
-/// See also [monthlyBudget].
-class MonthlyBudgetFamily extends Family<AsyncValue<MonthlyBudget?>> {
-  /// See also [monthlyBudget].
-  const MonthlyBudgetFamily();
+/// See also [budget].
+class BudgetFamily extends Family<AsyncValue<Budget?>> {
+  /// See also [budget].
+  const BudgetFamily();
 
-  /// See also [monthlyBudget].
-  MonthlyBudgetProvider call(
+  /// See also [budget].
+  BudgetProvider call(
     int year,
     int month,
   ) {
-    return MonthlyBudgetProvider(
+    return BudgetProvider(
       year,
       month,
     );
   }
 
   @override
-  MonthlyBudgetProvider getProviderOverride(
-    covariant MonthlyBudgetProvider provider,
+  BudgetProvider getProviderOverride(
+    covariant BudgetProvider provider,
   ) {
     return call(
       provider.year,
@@ -88,35 +86,34 @@ class MonthlyBudgetFamily extends Family<AsyncValue<MonthlyBudget?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'monthlyBudgetProvider';
+  String? get name => r'budgetProvider';
 }
 
-/// See also [monthlyBudget].
-class MonthlyBudgetProvider extends AutoDisposeStreamProvider<MonthlyBudget?> {
-  /// See also [monthlyBudget].
-  MonthlyBudgetProvider(
+/// See also [budget].
+class BudgetProvider extends AutoDisposeStreamProvider<Budget?> {
+  /// See also [budget].
+  BudgetProvider(
     int year,
     int month,
   ) : this._internal(
-          (ref) => monthlyBudget(
-            ref as MonthlyBudgetRef,
+          (ref) => budget(
+            ref as BudgetRef,
             year,
             month,
           ),
-          from: monthlyBudgetProvider,
-          name: r'monthlyBudgetProvider',
+          from: budgetProvider,
+          name: r'budgetProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$monthlyBudgetHash,
-          dependencies: MonthlyBudgetFamily._dependencies,
-          allTransitiveDependencies:
-              MonthlyBudgetFamily._allTransitiveDependencies,
+                  : _$budgetHash,
+          dependencies: BudgetFamily._dependencies,
+          allTransitiveDependencies: BudgetFamily._allTransitiveDependencies,
           year: year,
           month: month,
         );
 
-  MonthlyBudgetProvider._internal(
+  BudgetProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -132,12 +129,12 @@ class MonthlyBudgetProvider extends AutoDisposeStreamProvider<MonthlyBudget?> {
 
   @override
   Override overrideWith(
-    Stream<MonthlyBudget?> Function(MonthlyBudgetRef provider) create,
+    Stream<Budget?> Function(BudgetRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: MonthlyBudgetProvider._internal(
-        (ref) => create(ref as MonthlyBudgetRef),
+      override: BudgetProvider._internal(
+        (ref) => create(ref as BudgetRef),
         from: from,
         name: null,
         dependencies: null,
@@ -150,13 +147,13 @@ class MonthlyBudgetProvider extends AutoDisposeStreamProvider<MonthlyBudget?> {
   }
 
   @override
-  AutoDisposeStreamProviderElement<MonthlyBudget?> createElement() {
-    return _MonthlyBudgetProviderElement(this);
+  AutoDisposeStreamProviderElement<Budget?> createElement() {
+    return _BudgetProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is MonthlyBudgetProvider &&
+    return other is BudgetProvider &&
         other.year == year &&
         other.month == month;
   }
@@ -171,7 +168,7 @@ class MonthlyBudgetProvider extends AutoDisposeStreamProvider<MonthlyBudget?> {
   }
 }
 
-mixin MonthlyBudgetRef on AutoDisposeStreamProviderRef<MonthlyBudget?> {
+mixin BudgetRef on AutoDisposeStreamProviderRef<Budget?> {
   /// The parameter `year` of this provider.
   int get year;
 
@@ -179,15 +176,14 @@ mixin MonthlyBudgetRef on AutoDisposeStreamProviderRef<MonthlyBudget?> {
   int get month;
 }
 
-class _MonthlyBudgetProviderElement
-    extends AutoDisposeStreamProviderElement<MonthlyBudget?>
-    with MonthlyBudgetRef {
-  _MonthlyBudgetProviderElement(super.provider);
+class _BudgetProviderElement extends AutoDisposeStreamProviderElement<Budget?>
+    with BudgetRef {
+  _BudgetProviderElement(super.provider);
 
   @override
-  int get year => (origin as MonthlyBudgetProvider).year;
+  int get year => (origin as BudgetProvider).year;
   @override
-  int get month => (origin as MonthlyBudgetProvider).month;
+  int get month => (origin as BudgetProvider).month;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

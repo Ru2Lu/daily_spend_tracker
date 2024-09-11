@@ -1,5 +1,5 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
-import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
@@ -16,9 +16,9 @@ class ExpenseListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
-    final monthlyBudget = ref
+    final budget = ref
         .watch(
-          monthlyBudgetProvider(
+          budgetProvider(
             now.year,
             now.month,
           ),
@@ -33,7 +33,7 @@ class ExpenseListScreen extends ConsumerWidget {
       now.month,
     );
     // 今日使用出来る金額
-    final dayBudget = ((monthlyBudget ?? 0) / daysInThisMonth).floor();
+    final dayBudget = ((budget ?? 0) / daysInThisMonth).floor();
     // 今日までの今月の日数
     final daysInThisMonthUntilToday = DateTimeRange(
           start: DateTime(now.year, now.month, 1),

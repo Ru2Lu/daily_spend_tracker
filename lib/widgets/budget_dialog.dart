@@ -1,12 +1,12 @@
-import 'package:daily_spend_tracker/providers/monthly_budget_service_provider.dart';
+import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/dialog/dialog_controller_provider.dart';
 import '../providers/dialog/dialog_error_message_provider.dart';
 import '../utils/format.dart';
 
-class MonthlyBudgetDialog extends ConsumerStatefulWidget {
-  const MonthlyBudgetDialog({
+class BudgetDialog extends ConsumerStatefulWidget {
+  const BudgetDialog({
     this.initialValue,
     super.key,
   });
@@ -15,10 +15,10 @@ class MonthlyBudgetDialog extends ConsumerStatefulWidget {
   final int? initialValue;
 
   @override
-  MonthlyBudgetDialogState createState() => MonthlyBudgetDialogState();
+  BudgetDialogState createState() => BudgetDialogState();
 }
 
-class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
+class BudgetDialogState extends ConsumerState<BudgetDialog> {
   @override
   void initState() {
     super.initState();
@@ -86,17 +86,17 @@ class MonthlyBudgetDialogState extends ConsumerState<MonthlyBudgetDialog> {
                   .read(dialogErrorMessageProvider.notifier)
                   .setDialogErrorMessage('金額を入力してください');
             } else {
-              final monthlyBudget = int.tryParse(
+              final budget = int.tryParse(
                 controller.text.replaceAll(',', ''),
               );
-              if ((monthlyBudget ?? 0) <= 0) {
+              if ((budget ?? 0) <= 0) {
                 ref
                     .read(dialogErrorMessageProvider.notifier)
                     .setDialogErrorMessage('金額を入力してください');
               } else {
                 // 金額が入力されてる場合はダイアログを閉じる
-                ref.read(monthlyBudgetServiceProvider.future).then(
-                      (service) => service.saveMonthlyBudget(monthlyBudget),
+                ref.read(budgetServiceProvider.future).then(
+                      (service) => service.saveBudget(budget),
                     );
                 Navigator.of(context).pop();
               }
