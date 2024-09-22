@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.0
   cupertino_icons: ^1.0.6
   intl: ^0.18.1
   flutter_riverpod: ^2.5.1
@@ -35,3 +36,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  ios: true
+  image_path: 'assets/images/app_icon_ios.png'
+  remove_alpha_ios: true
+  android: true
+  adaptive_icon_background: 'assets/images/app_icon_adaptive_background.png'
+  adaptive_icon_foreground: 'assets/images/app_icon_adaptive_foreground.png'
