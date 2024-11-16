@@ -2,7 +2,6 @@ import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../providers/dialog/dialog_controller_provider.dart';
 import '../utils/format.dart';
 
 class BudgetDialog extends HookConsumerWidget {
@@ -16,12 +15,11 @@ class BudgetDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(dialogControllerProvider);
+    final controller = useTextEditingController();
     final errorMessage = useState<String?>(null);
 
     useEffect(() {
       if (initialValue != null) {
-        final controller = ref.read(dialogControllerProvider);
         final initialText = initialValue!.toString();
         final budgetValue = formatCommaSeparateNumber(
           initialText.replaceAll(',', ''),
