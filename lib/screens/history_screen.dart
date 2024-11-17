@@ -1,25 +1,30 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
-import 'package:daily_spend_tracker/providers/selected_year_month_provider.dart';
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/utils/format.dart';
 import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class HistoryScreen extends ConsumerWidget {
+class HistoryScreen extends HookConsumerWidget {
   const HistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedYearMonth = ref.watch(selectedYearMonthProvider);
+    final selectedYearMonth = useState<DateTime>(
+      DateTime(
+        DateTime.now().year,
+        DateTime.now().month - 1,
+      ),
+    );
     final budget = ref
         .watch(
           budgetProvider(
-            selectedYearMonth.year,
-            selectedYearMonth.month,
+            selectedYearMonth.value.year,
+            selectedYearMonth.value.month,
           ),
         )
         .value
@@ -27,8 +32,8 @@ class HistoryScreen extends ConsumerWidget {
     // フィルターと同じ年月の支出項目のみを取り出す
     final expenses = (ref.watch(expensesProvider).value ?? []).where((expense) {
       final expenseDate = expense.date;
-      return expenseDate!.year == selectedYearMonth.year &&
-          expenseDate.month == selectedYearMonth.month;
+      return expenseDate!.year == selectedYearMonth.value.year &&
+          expenseDate.month == selectedYearMonth.value.month;
     }).toList();
 
     final spending = expenses.fold(
@@ -71,14 +76,12 @@ class HistoryScreen extends ConsumerWidget {
                 context,
                 showTitleActions: true,
                 onConfirm: (date) {
-                  ref
-                      .read(selectedYearMonthProvider.notifier)
-                      .setSelectedYearMonth(date);
+                  selectedYearMonth.value = date;
                 },
                 pickerModel: YearMonth(
                   currentTime: DateTime(
-                    selectedYearMonth.year,
-                    selectedYearMonth.month,
+                    selectedYearMonth.value.year,
+                    selectedYearMonth.value.month,
                     1,
                   ),
                   // 過去3ヶ月分までの履歴を確認できる
@@ -98,7 +101,7 @@ class HistoryScreen extends ConsumerWidget {
               );
             },
             child: Text(
-              _formatYearMonth(selectedYearMonth),
+              _formatYearMonth(selectedYearMonth.value),
             ),
           ),
 
