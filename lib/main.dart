@@ -11,9 +11,49 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() {
   runApp(
     const ProviderScope(
-      child: MyApp(),
+      child: RestartWidget(
+        child: MyApp(),
+      ),
     ),
   );
+}
+
+class RestartWidget extends StatefulWidget {
+  const RestartWidget({
+    required this.child,
+    super.key,
+  });
+
+  final Widget child;
+
+  static void restartApp(
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    context.findAncestorStateOfType<RestartWidgetState>()!.restartApp(ref);
+  }
+
+  @override
+  RestartWidgetState createState() => RestartWidgetState();
+}
+
+class RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp(WidgetRef ref) {
+    setState(() {
+      key = UniqueKey();
+    });
+    ref.read(indexBottomNavbarProvider.notifier).setIndexBottomNavbar(0);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
+    );
+  }
 }
 
 class MyApp extends ConsumerStatefulWidget {
