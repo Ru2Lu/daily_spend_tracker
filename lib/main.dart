@@ -1,12 +1,12 @@
 import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
-import 'package:daily_spend_tracker/providers/index_bottom_navbar_provider.dart';
 import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
 import 'package:daily_spend_tracker/screens/history_screen.dart';
 import 'package:daily_spend_tracker/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   runApp(
@@ -44,7 +44,6 @@ class RestartWidgetState extends State<RestartWidget> {
     setState(() {
       key = UniqueKey();
     });
-    ref.read(indexBottomNavbarProvider.notifier).setIndexBottomNavbar(0);
   }
 
   @override
@@ -56,55 +55,37 @@ class RestartWidgetState extends State<RestartWidget> {
   }
 }
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({
     super.key,
   });
 
   @override
-  MyAppState createState() => MyAppState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final indexBottomNavbar = useState(0);
+    final appLifecycleState = useAppLifecycleState();
 
-class MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    // アプリのライフサイクルの監視を開始
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      await _deleteOldData();
-    }
-  }
-
-  @override
-  void dispose() {
-    // アプリのライフサイクルの監視を終了
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  Future<void> _deleteOldData() async {
-    await ref.read(budgetServiceProvider.future).then(
-          (service) => service.deleteOldBudgets(),
-        );
-    await ref.read(expenseServiceProvider.future).then(
-          (service) => service.deleteOldExpenses(),
-        );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final screens = [
       const HomeScreen(),
       const ExpenseListScreen(),
       const HistoryScreen(),
     ];
 
-    final indexBottomNavbar = ref.watch(indexBottomNavbarProvider);
+    useEffect(() {
+      Future<void> deleteOldData() async {
+        final budgetService = await ref.read(budgetServiceProvider.future);
+        await budgetService.deleteOldBudgets();
+        final expenseService = await ref.read(expenseServiceProvider.future);
+        await expenseService.deleteOldExpenses();
+      }
+
+      // アプリが再開されたときに古いデータを削除
+      if (appLifecycleState == AppLifecycleState.resumed) {
+        deleteOldData();
+      }
+
+      return null;
+    }, [appLifecycleState]);
 
     return MaterialApp(
       title: '毎日収支管理',
@@ -122,7 +103,7 @@ class MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
       ],
       home: Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: indexBottomNavbar,
+          currentIndex: indexBottomNavbar.value,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -138,12 +119,10 @@ class MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
             ),
           ],
           onTap: (value) {
-            ref
-                .read(indexBottomNavbarProvider.notifier)
-                .setIndexBottomNavbar(value);
+            indexBottomNavbar.value = value;
           },
         ),
-        body: screens[indexBottomNavbar],
+        body: screens[indexBottomNavbar.value],
       ),
     );
   }
