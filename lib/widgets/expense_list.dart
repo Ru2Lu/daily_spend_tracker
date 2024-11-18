@@ -1,11 +1,11 @@
 import 'package:daily_spend_tracker/models/expense.dart';
-import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
-import 'package:daily_spend_tracker/widgets/expense/expense_bottom_sheet.dart';
-import 'package:daily_spend_tracker/widgets/expense/expense_card.dart';
+import 'package:daily_spend_tracker/providers/expense_service_provider.dart';
+import 'package:daily_spend_tracker/widgets/expense_bottom_sheet.dart';
+import 'package:daily_spend_tracker/widgets/expense_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../utils/format.dart';
+import '../utils/format.dart';
 
 class ExpenseList extends ConsumerWidget {
   const ExpenseList({

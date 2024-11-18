@@ -1,7 +1,7 @@
 import 'package:daily_spend_tracker/models/expense.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../services/expense_service.dart';
-import '../isar_provider.dart';
+import '../services/expense_service.dart';
+import 'isar_provider.dart';
 
 part 'expense_service_provider.g.dart';
 

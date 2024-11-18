@@ -1,8 +1,8 @@
-import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
+import 'package:daily_spend_tracker/providers/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/settings_screen.dart';
 import 'package:daily_spend_tracker/utils/format.dart';
-import 'package:daily_spend_tracker/widgets/expense/expense_list.dart';
+import 'package:daily_spend_tracker/widgets/expense_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

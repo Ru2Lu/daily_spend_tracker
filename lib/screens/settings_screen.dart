@@ -1,5 +1,5 @@
 import 'package:daily_spend_tracker/main.dart';
-import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
+import 'package:daily_spend_tracker/providers/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

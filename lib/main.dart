@@ -1,4 +1,4 @@
-import 'package:daily_spend_tracker/providers/expense/expense_service_provider.dart';
+import 'package:daily_spend_tracker/providers/expense_service_provider.dart';
 import 'package:daily_spend_tracker/providers/budget_service_provider.dart';
 import 'package:daily_spend_tracker/screens/expense_list_screen.dart';
 import 'package:daily_spend_tracker/screens/history_screen.dart';

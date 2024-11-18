@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../../utils/format.dart';
+import '../utils/format.dart';
 
 class ExpenseCard extends StatelessWidget {
   const ExpenseCard({
