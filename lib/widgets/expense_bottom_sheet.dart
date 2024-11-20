@@ -1,5 +1,6 @@
 import 'package:daily_spend_tracker/models/expense.dart';
 import 'package:daily_spend_tracker/providers/expense_item_provider.dart';
+import 'package:daily_spend_tracker/utils/number_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,22 +98,27 @@ class ExpenseBottomSheetState extends ConsumerState<ExpenseBottomSheet> {
               ),
               keyboardType: TextInputType.number,
               inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'^[1-9][0-9]*'))
+                FilteringTextInputFormatter.digitsOnly,
+                NumberInputFormatter(),
               ],
               onChanged: (value) {
                 final expenseAmount = int.tryParse(value) ?? 0;
                 ref.read(expenseItemProvider.notifier).setAmount(expenseAmount);
                 setState(() {
-                  amountErrorMessage = value.isEmpty ? '金額を入力してください' : null;
+                  amountErrorMessage =
+                      (value.isEmpty || value == '0') ? '金額を入力してください' : null;
                 });
               },
             ),
           ),
           ElevatedButton(
             onPressed: titleController.text.isNotEmpty &&
-                    amountController.text.isNotEmpty
+                    amountController.text.isNotEmpty &&
+                    amountController.text != '0'
                 ? () async {
-                    final expenseAmount = int.parse(amountController.text);
+                    final expenseAmount = int.parse(
+                      amountController.text.replaceAll(',', ''),
+                    );
                     final expenseService =
                         await ref.read(expenseServiceProvider.future);
                     if (widget.expense == null) {
